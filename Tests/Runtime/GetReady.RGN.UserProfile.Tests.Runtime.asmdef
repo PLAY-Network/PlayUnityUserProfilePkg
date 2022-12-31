@@ -6,7 +6,8 @@
         "UnityEditor.TestRunner",
         "GetReady.RGN.Core.Runtime",
         "GetReady.RGN.Impl.Firebase.Runtime",
-        "Unity.PerformanceTesting"
+        "Unity.PerformanceTesting",
+        "GetReady.RGN.Tests.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

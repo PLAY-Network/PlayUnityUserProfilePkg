@@ -1,57 +1,26 @@
+using System.Collections;
 using NUnit.Framework;
 using RGN.Extensions;
-using RGN.Impl.Firebase.Core;
-using RGN.Model;
 using RGN.Modules.UserProfile;
-using System.Collections;
+using RGN.Tests;
 using UnityEngine.TestTools;
 
 namespace RGN.UserProfile.Tests.Runtime
 {
     [TestFixture]
-    public class UserProfileTests
+    public class UserProfileTests : BaseTests
     {
         private static bool[] isAdminArray = new bool[] { false, true };
         private static int[] accessLevelArray = new int[] { 1, 4, 34, -1 };
-
-        [OneTimeSetUp]
-        public async void OneTimeSetup()
-        {
-            var applicationStore = ApplicationStore.I; //TODO: this will work only in editor.
-            RGNCoreBuilder.AddModule(new UserProfileModule<UserProfileData>(applicationStore.RGNStorageURL));
-            var appOptions = new AppOptions()
-            {
-                ApiKey = applicationStore.RGNMasterApiKey,
-                AppId = applicationStore.RGNMasterAppID,
-                ProjectId = applicationStore.RGNMasterProjectId
-            };
-
-            await RGNCoreBuilder.Build(
-                new RGN.Impl.Firebase.Dependencies(
-                    appOptions,
-                    applicationStore.RGNStorageURL),
-                appOptions,
-               applicationStore.RGNStorageURL,
-               applicationStore.RGNAppId);
-
-            if (applicationStore.usingEmulator)
-            {
-                RGNCore rgnCore = (RGNCore)RGNCoreBuilder.I;
-                var firestore = rgnCore.readyMasterFirestore;
-                string firestoreHost = applicationStore.emulatorServerIp + applicationStore.firestorePort;
-                bool firestoreSslEnabled = false;
-                firestore.UserEmulator(firestoreHost, firestoreSslEnabled);
-                rgnCore.readyMasterFunction.UseFunctionsEmulator(applicationStore.emulatorServerIp + applicationStore.functionsPort);
-                //TODO: storage, auth, realtime db
-            }
-        }
 
         [UnityTest]
         public IEnumerator ChangeAdminStatusByUserId_CanBeCalledOnlyWithAdminRights(
             [ValueSource("isAdminArray")] bool isAdmin,
             [ValueSource("accessLevelArray")] int accessLevel)
         {
-            var task = RGNCoreBuilder.I.GetModule<UserProfileModule<UserProfileData>>().ChangeAdminStatusByUserId(
+            yield return LoginAsAdminTester();
+
+            var task = UserProfileModule<UserProfileData>.I.ChangeAdminStatusByUserId(
                 "00c377dca1054b64b6186d1c6eab96d4",
                 isAdmin,
                 accessLevel);
@@ -64,7 +33,9 @@ namespace RGN.UserProfile.Tests.Runtime
         [UnityTest]
         public IEnumerator ChangeAdminStatusByEmail_CanBeCalledOnlyWithAdminRights()
         {
-            var task = RGNCoreBuilder.I.GetModule<UserProfileModule<UserProfileData>>().ChangeAdminStatusByEmail(
+            yield return LoginAsAdminTester();
+
+            var task = UserProfileModule<UserProfileData>.I.ChangeAdminStatusByEmail(
                 "readyemailtest@gmail.com",
                 true,
                 1);
@@ -77,7 +48,9 @@ namespace RGN.UserProfile.Tests.Runtime
         [UnityTest]
         public IEnumerator GetUserCustomClaimsByUserId_CanBeCalledByAnyUser()
         {
-            var task = RGNCoreBuilder.I.GetModule<UserProfileModule<UserProfileData>>().GetUserCustomClaimsByUserId(
+            yield return LoginAsNormalTester();
+
+            var task = UserProfileModule<UserProfileData>.I.GetUserCustomClaimsByUserId(
                 "88da8d6527b44c00b2ece69d9d561469");
             yield return task.AsIEnumeratorReturnNull();
             var result = task.Result;
@@ -88,7 +61,9 @@ namespace RGN.UserProfile.Tests.Runtime
         [UnityTest]
         public IEnumerator GetUserCustomClaimsByUserId_GivesErrorForNonExistingUser()
         {
-            var task = RGNCoreBuilder.I.GetModule<UserProfileModule<UserProfileData>>().GetUserCustomClaimsByUserId(
+            yield return LoginAsNormalTester();
+
+            var task = UserProfileModule<UserProfileData>.I.GetUserCustomClaimsByUserId(
                 "user_id_that_does_not_exist");
             yield return task.AsIEnumeratorReturnNullDontThrow();
 
@@ -97,7 +72,9 @@ namespace RGN.UserProfile.Tests.Runtime
         [UnityTest]
         public IEnumerator GetUserCustomClaimsByEmail_CanBeCalledByAnyUser()
         {
-            var task = RGNCoreBuilder.I.GetModule<UserProfileModule<UserProfileData>>().GetUserCustomClaimsByEmail(
+            yield return LoginAsNormalTester();
+
+            var task = UserProfileModule<UserProfileData>.I.GetUserCustomClaimsByEmail(
                 "readyemailtest@gmail.com");
             yield return task.AsIEnumeratorReturnNull();
             var result = task.Result;
@@ -108,7 +85,9 @@ namespace RGN.UserProfile.Tests.Runtime
         [UnityTest]
         public IEnumerator GetUserCustomClaimsByEmail_GivesErrorForNonExistingUser()
         {
-            var task = RGNCoreBuilder.I.GetModule<UserProfileModule<UserProfileData>>().GetUserCustomClaimsByEmail(
+            yield return LoginAsNormalTester();
+
+            var task = UserProfileModule<UserProfileData>.I.GetUserCustomClaimsByEmail(
                 "not_existing_user@fake.me");
             yield return task.AsIEnumeratorReturnNullDontThrow();
 
@@ -117,7 +96,9 @@ namespace RGN.UserProfile.Tests.Runtime
         [UnityTest]
         public IEnumerator MeasureUserClaimsSearchTime_ReturnsHtmlPage()
         {
-            var task = RGNCoreBuilder.I.GetModule<UserProfileModule<UserProfileData>>().MeasureUserClaimsSearchTime(
+            yield return LoginAsNormalTester();
+
+            var task = UserProfileModule<UserProfileData>.I.MeasureUserClaimsSearchTime(
                 "88da8d6527b44c00b2ece69d9d561469");
             yield return task.AsIEnumeratorReturnNull();
 
