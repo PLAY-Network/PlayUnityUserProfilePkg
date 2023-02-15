@@ -43,7 +43,10 @@ namespace RGN.UserProfile.Tests.Runtime
             var result = task.Result;
 
             Assert.NotNull(result, "The result is null");
-            UnityEngine.Debug.Log(result);
+            foreach (var item in result)
+            {
+                UnityEngine.Debug.Log(item.Key + ": " + item.Value);
+            }
         }
         [UnityTest]
         public IEnumerator GetUserCustomClaimsByUserId_CanBeCalledByAnyUser()
@@ -56,7 +59,10 @@ namespace RGN.UserProfile.Tests.Runtime
             var result = task.Result;
 
             Assert.NotNull(result, "The result is null");
-            UnityEngine.Debug.Log(result);
+            foreach (var item in result)
+            {
+                UnityEngine.Debug.Log(item.Key + ": " + item.Value);
+            }
         }
         [UnityTest]
         public IEnumerator GetUserCustomClaimsByUserId_GivesErrorForNonExistingUser()
@@ -80,7 +86,10 @@ namespace RGN.UserProfile.Tests.Runtime
             var result = task.Result;
 
             Assert.NotNull(result, "The result is null");
-            UnityEngine.Debug.Log(result);
+            foreach (var item in result)
+            {
+                UnityEngine.Debug.Log(item.Key + ": " + item.Value);
+            }
         }
         [UnityTest]
         public IEnumerator GetUserCustomClaimsByEmail_GivesErrorForNonExistingUser()
