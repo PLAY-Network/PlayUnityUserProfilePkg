@@ -20,7 +20,7 @@ namespace RGN.UserProfile.Tests.Runtime
         {
             yield return LoginAsAdminTester();
 
-            var task = UserProfileModule<UserProfileData>.I.ChangeAdminStatusByUserIdAsync(
+            var task = UserProfileModule.I.ChangeAdminStatusByUserIdAsync(
                 "00c377dca1054b64b6186d1c6eab96d4",
                 isAdmin,
                 accessLevel);
@@ -35,7 +35,7 @@ namespace RGN.UserProfile.Tests.Runtime
         {
             yield return LoginAsAdminTester();
 
-            var task = UserProfileModule<UserProfileData>.I.ChangeAdminStatusByEmailAsync(
+            var task = UserProfileModule.I.ChangeAdminStatusByEmailAsync(
                 "readyemailtest@gmail.com",
                 true,
                 1);
@@ -53,7 +53,7 @@ namespace RGN.UserProfile.Tests.Runtime
         {
             yield return LoginAsNormalTester();
 
-            var task = UserProfileModule<UserProfileData>.I.GetUserCustomClaimsByUserIdAsync(
+            var task = UserProfileModule.I.GetUserCustomClaimsByUserIdAsync(
                 "88da8d6527b44c00b2ece69d9d561469");
             yield return task.AsIEnumeratorReturnNull();
             var result = task.Result;
@@ -69,7 +69,7 @@ namespace RGN.UserProfile.Tests.Runtime
         {
             yield return LoginAsNormalTester();
 
-            var task = UserProfileModule<UserProfileData>.I.GetUserCustomClaimsByUserIdAsync(
+            var task = UserProfileModule.I.GetUserCustomClaimsByUserIdAsync(
                 "user_id_that_does_not_exist");
             yield return task.AsIEnumeratorReturnNullDontThrow();
 
@@ -80,7 +80,7 @@ namespace RGN.UserProfile.Tests.Runtime
         {
             yield return LoginAsNormalTester();
 
-            var task = UserProfileModule<UserProfileData>.I.GetUserCustomClaimsByEmailAsync(
+            var task = UserProfileModule.I.GetUserCustomClaimsByEmailAsync(
                 "readyemailtest@gmail.com");
             yield return task.AsIEnumeratorReturnNull();
             var result = task.Result;
@@ -96,7 +96,7 @@ namespace RGN.UserProfile.Tests.Runtime
         {
             yield return LoginAsNormalTester();
 
-            var task = UserProfileModule<UserProfileData>.I.GetUserCustomClaimsByEmailAsync(
+            var task = UserProfileModule.I.GetUserCustomClaimsByEmailAsync(
                 "not_existing_user@fake.me");
             yield return task.AsIEnumeratorReturnNullDontThrow();
 
@@ -107,7 +107,7 @@ namespace RGN.UserProfile.Tests.Runtime
         {
             yield return LoginAsNormalTester();
 
-            var task = UserProfileModule<UserProfileData>.I.MeasureUserClaimsSearchTimeAsync(
+            var task = UserProfileModule.I.MeasureUserClaimsSearchTimeAsync(
                 "88da8d6527b44c00b2ece69d9d561469");
             yield return task.AsIEnumeratorReturnNull();
 
