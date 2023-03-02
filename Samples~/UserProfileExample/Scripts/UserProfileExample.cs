@@ -89,24 +89,24 @@ namespace RGN.Samples
         {
             _canvasGroup.interactable = false;
             _profilePictureLoadingIndicator.SetEnabled(true);
-            //string userProfileImageLocalPath = Path.Combine(Application.persistentDataPath, "user_profile", "icon.png");
+            string userProfileImageLocalPath = Path.Combine(Application.persistentDataPath, "user_profile", "icon.png");
             Texture2D userProfilePicture = null;
-            //if (tryToloadFromCache)
-            //{
-            //    if (File.Exists(userProfileImageLocalPath))
-            //    {
-            //        byte[] bytes = File.ReadAllBytes(userProfileImageLocalPath);
-            //        userProfilePicture = new Texture2D(2, 2);
-            //        userProfilePicture.LoadImage(bytes);
-            //    }
-            //}
+            if (tryToloadFromCache)
+            {
+                if (File.Exists(userProfileImageLocalPath))
+                {
+                    byte[] bytes = File.ReadAllBytes(userProfileImageLocalPath);
+                    userProfilePicture = new Texture2D(2, 2);
+                    userProfilePicture.LoadImage(bytes);
+                }
+            }
             if (userProfilePicture == null)
             {
-                userProfilePicture = await UserProfileModule.I.DownloadThumbnailAsync<Texture2D>(
+                userProfilePicture = await UserProfileModule.I.DownloadAvatarImageAsync<Texture2D>(
                     RGNCore.I.MasterAppUser.UserId);
-                //byte[] bytes = userProfilePicture.EncodeToPNG();
-                //Directory.CreateDirectory(Path.GetDirectoryName(userProfileImageLocalPath));
-                //File.WriteAllBytes(userProfileImageLocalPath, bytes);
+                byte[] bytes = userProfilePicture.EncodeToPNG();
+                Directory.CreateDirectory(Path.GetDirectoryName(userProfileImageLocalPath));
+                File.WriteAllBytes(userProfileImageLocalPath, bytes);
             }
             if (userProfilePicture != null)
             {
@@ -139,7 +139,7 @@ namespace RGN.Samples
                     var unityTexture = new Texture2D(2, 2);
                     unityTexture.LoadImage(textureBytes);
                     var rgnTexture = new Impl.Firebase.Engine.Texture2D(unityTexture);
-                    await UserProfileModule.I.UploadUserThumbnailAsync(rgnTexture);
+                    await UserProfileModule.I.UploadAvatarImageAsync(rgnTexture);
                     await LoadProfilePictureAsync(false);
                     tcs.TrySetResult(true);
                 }
