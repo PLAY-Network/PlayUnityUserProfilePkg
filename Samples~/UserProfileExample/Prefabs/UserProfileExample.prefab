@@ -839,8 +839,8 @@ MonoBehaviour:
   _canvasGroup: {fileID: 1768948281095884739}
   _uploadNewProfilePictureButton: {fileID: 1768948281152518185}
   _openWalletsScreenButton: {fileID: 1768948280008203051}
-  _profilePictureLoadingIndicator: {fileID: 5646878458907388739}
-  _fullScreenLoadingIndicator: {fileID: 4908731444003681010}
+  _profilePictureLoadingIndicator: {fileID: 4908731444003681010}
+  _fullScreenLoadingIndicator: {fileID: 5646878458907388739}
   _primaryWalletLoadingIndicator: {fileID: 772718050767183545}
   _displayNameText: {fileID: 1768948279482837598}
   _emailText: {fileID: 1768948279643149510}
