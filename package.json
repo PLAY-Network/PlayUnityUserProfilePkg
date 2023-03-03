@@ -23,7 +23,17 @@
     "/package.json",
     "/package.json.meta",
     "/ReadyGamesNetwork",
-    "/ReadyGamesNetwork.meta"
+    "/ReadyGamesNetwork.meta",
+    "/Samples",
+    "/Samples.meta",
+    "/Samples~"
+  ],
+  "samples": [
+    {
+      "displayName": "User Profile Sample",
+      "description": "Get the user profile data, change the avatar and some other user information.",
+      "path": "Samples~/UserProfileExample"
+    }
   ],
   "dependencies": {
     "io.getready.rgn.core": "0.1.0",
