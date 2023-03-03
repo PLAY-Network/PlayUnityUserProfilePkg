@@ -89,7 +89,8 @@ namespace RGN.Samples
         {
             _canvasGroup.interactable = false;
             _profilePictureLoadingIndicator.SetEnabled(true);
-            string userProfileImageLocalPath = Path.Combine(Application.persistentDataPath, "user_profile", "icon.png");
+            string userId = RGNCore.I.MasterAppUser.UserId;
+            string userProfileImageLocalPath = Path.Combine(Application.persistentDataPath, "user_profile", userId + ".png");
             Texture2D userProfilePicture = null;
             if (tryToloadFromCache)
             {
@@ -102,11 +103,13 @@ namespace RGN.Samples
             }
             if (userProfilePicture == null)
             {
-                userProfilePicture = await UserProfileModule.I.DownloadAvatarImageAsync<Texture2D>(
-                    RGNCore.I.MasterAppUser.UserId);
-                byte[] bytes = userProfilePicture.EncodeToPNG();
-                Directory.CreateDirectory(Path.GetDirectoryName(userProfileImageLocalPath));
-                File.WriteAllBytes(userProfileImageLocalPath, bytes);
+                userProfilePicture = await UserProfileModule.I.DownloadAvatarImageAsync<Texture2D>(userId);
+                if (userProfilePicture != null)
+                {
+                    byte[] bytes = userProfilePicture.EncodeToPNG();
+                    Directory.CreateDirectory(Path.GetDirectoryName(userProfileImageLocalPath));
+                    File.WriteAllBytes(userProfileImageLocalPath, bytes);
+                }
             }
             if (userProfilePicture != null)
             {
