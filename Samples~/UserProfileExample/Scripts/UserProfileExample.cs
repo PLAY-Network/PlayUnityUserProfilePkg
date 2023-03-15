@@ -103,10 +103,14 @@ namespace RGN.Samples
             }
             if (userProfilePicture == null)
             {
-                userProfilePicture = await UserProfileModule.I.DownloadAvatarImageAsync<Texture2D>(userId);
+                byte[] bytes = await UserProfileModule.I.DownloadAvatarImageAsync(userId);
+
+                userProfilePicture = new Texture2D(1, 1);
+                userProfilePicture.LoadImage(bytes);
+                userProfilePicture.Apply();
+                
                 if (userProfilePicture != null)
                 {
-                    byte[] bytes = userProfilePicture.EncodeToPNG();
                     Directory.CreateDirectory(Path.GetDirectoryName(userProfileImageLocalPath));
                     File.WriteAllBytes(userProfileImageLocalPath, bytes);
                 }
@@ -139,10 +143,7 @@ namespace RGN.Samples
                         return;
                     }
                     byte[] textureBytes = File.ReadAllBytes(path);
-                    var unityTexture = new Texture2D(2, 2);
-                    unityTexture.LoadImage(textureBytes);
-                    var rgnTexture = new Impl.Firebase.Engine.Texture2D(unityTexture);
-                    await UserProfileModule.I.UploadAvatarImageAsync(rgnTexture);
+                    await UserProfileModule.I.UploadAvatarImageAsync(textureBytes);
                     await LoadProfilePictureAsync(false);
                     tcs.TrySetResult(true);
                 }
