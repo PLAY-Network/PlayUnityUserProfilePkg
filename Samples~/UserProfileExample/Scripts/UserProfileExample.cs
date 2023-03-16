@@ -104,13 +104,12 @@ namespace RGN.Samples
             if (userProfilePicture == null)
             {
                 byte[] bytes = await UserProfileModule.I.DownloadAvatarImageAsync(userId);
-
-                userProfilePicture = new Texture2D(1, 1);
-                userProfilePicture.LoadImage(bytes);
-                userProfilePicture.Apply();
                 
-                if (userProfilePicture != null)
+                if (bytes != null)
                 {
+                    userProfilePicture = new Texture2D(1, 1);
+                    userProfilePicture.LoadImage(bytes);
+                    userProfilePicture.Apply();
                     Directory.CreateDirectory(Path.GetDirectoryName(userProfileImageLocalPath));
                     File.WriteAllBytes(userProfileImageLocalPath, bytes);
                 }
