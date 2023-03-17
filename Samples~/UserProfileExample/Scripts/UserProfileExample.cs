@@ -18,29 +18,27 @@ namespace RGN.Samples
     public sealed class UserProfileExample : IUIScreen
     {
         [SerializeField] private CanvasGroup _canvasGroup;
-        [SerializeField] private Button _uploadNewProfilePictureButton;
         [SerializeField] private Button _openWalletsScreenButton;
-        [SerializeField] private LoadingIndicator _profilePictureLoadingIndicator;
         [SerializeField] private LoadingIndicator _fullScreenLoadingIndicator;
         [SerializeField] private LoadingIndicator _primaryWalletLoadingIndicator;
         [SerializeField] private TextMeshProUGUI _displayNameText;
         [SerializeField] private TextMeshProUGUI _emailText;
         [SerializeField] private TextMeshProUGUI _primaryWalletAddressText;
-        [SerializeField] private RawImage _userProfileIconRawImage;
+        [SerializeField] private IconImage _profileIconImage;
 
         private IUserProfileClient _userProfileClient;
 
         public override void PreInit(IRGNFrame rgnFrame)
         {
             base.PreInit(rgnFrame);
-            _uploadNewProfilePictureButton.onClick.AddListener(OnUploadNewProfilePictureButtonClickAsync);
+            _profileIconImage.OnClick.AddListener(OnUploadNewProfilePictureButtonClickAsync);
             _openWalletsScreenButton.onClick.AddListener(OnOpenWalletsScreenButtonClickAsync);
             RGNCore.I.AuthenticationChanged += OnAuthStateChangedAsync;
         }
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-            _uploadNewProfilePictureButton.onClick.RemoveListener(OnUploadNewProfilePictureButtonClickAsync);
+            _profileIconImage.OnClick.RemoveListener(OnUploadNewProfilePictureButtonClickAsync);
             _openWalletsScreenButton.onClick.RemoveListener(OnOpenWalletsScreenButtonClickAsync);
             RGNCore.I.AuthenticationChanged -= OnAuthStateChangedAsync;
         }
@@ -88,7 +86,7 @@ namespace RGN.Samples
         private async Task LoadProfilePictureAsync(bool tryToloadFromCache)
         {
             _canvasGroup.interactable = false;
-            _profilePictureLoadingIndicator.SetEnabled(true);
+            _profileIconImage.SetLoading(true);
             string userId = RGNCore.I.MasterAppUser.UserId;
             string userProfileImageLocalPath = Path.Combine(Application.persistentDataPath, "user_profile", userId + ".png");
             Texture2D userProfilePicture = null;
@@ -99,6 +97,7 @@ namespace RGN.Samples
                     byte[] bytes = File.ReadAllBytes(userProfileImageLocalPath);
                     userProfilePicture = new Texture2D(2, 2);
                     userProfilePicture.LoadImage(bytes);
+                    userProfilePicture.Apply();
                 }
             }
             if (userProfilePicture == null)
@@ -114,12 +113,9 @@ namespace RGN.Samples
                     File.WriteAllBytes(userProfileImageLocalPath, bytes);
                 }
             }
-            if (userProfilePicture != null)
-            {
-                _userProfileIconRawImage.texture = userProfilePicture;
-            }
+            _profileIconImage.SetProfileTexture(userProfilePicture);
             _canvasGroup.interactable = true;
-            _profilePictureLoadingIndicator.SetEnabled(false);
+            _profileIconImage.SetLoading(false);
         }
         private async void OnUploadNewProfilePictureButtonClickAsync()
         {
