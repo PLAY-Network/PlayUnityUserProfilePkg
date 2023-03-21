@@ -2,6 +2,7 @@ using System.IO;
 using System.Threading.Tasks;
 using RGN.Impl.Firebase;
 using RGN.Modules.UserProfile;
+using RGN.Modules.VirtualItems;
 using RGN.UI;
 using TMPro;
 using UnityEngine;
@@ -27,6 +28,7 @@ namespace RGN.Samples
         [SerializeField] private IconImage _profileIconImage;
         [SerializeField] private CoinInfoItem _rgnCoinInfo;
         [SerializeField] private CoinInfoItem _customCoinInfo;
+        [SerializeField] private PullToRefresh _pullToRefresh;
 
         private IUserProfileClient _userProfileClient;
 
@@ -36,6 +38,7 @@ namespace RGN.Samples
             _profileIconImage.OnClick.AddListener(OnUploadNewProfilePictureButtonClickAsync);
             _openWalletsScreenButton.onClick.AddListener(OnOpenWalletsScreenButtonClickAsync);
             RGNCore.I.AuthenticationChanged += OnAuthStateChangedAsync;
+            _pullToRefresh.RefreshRequested += ReloadUserProfileAsync;
         }
         protected override void Dispose(bool disposing)
         {
@@ -43,6 +46,7 @@ namespace RGN.Samples
             _profileIconImage.OnClick.RemoveListener(OnUploadNewProfilePictureButtonClickAsync);
             _openWalletsScreenButton.onClick.RemoveListener(OnOpenWalletsScreenButtonClickAsync);
             RGNCore.I.AuthenticationChanged -= OnAuthStateChangedAsync;
+            _pullToRefresh.RefreshRequested -= ReloadUserProfileAsync;
         }
         public void SetUserProfileClient(IUserProfileClient userProfileClient)
         {
@@ -56,31 +60,35 @@ namespace RGN.Samples
                 case EnumLoginState.NotLoggedIn:
                     break;
                 case EnumLoginState.Success:
-                    SetEmailAndDisplayName("Loading email...", "Loading display name...");
-                    SetUserCoinInfoIsLoading();
-                    string displayName = string.Empty;
-                    string email = string.Empty;
-                    if (RGNCore.I.AuthorizedProviders == EnumAuthProvider.Guest)
-                    {
-                        displayName = " Guest Account";
-                        email = "guest@getready.io";
-                    }
-                    else if (RGNCore.I.AuthorizedProviders == EnumAuthProvider.Email)
-                    {
-                        var userProfile = await UserProfileModule.I.GetProfileAsync(RGNCore.I.MasterAppUser.UserId);
-                        displayName = userProfile.displayName;
-                        email = RGNCore.I.MasterAppUser.Email;
-                    }
-                    SetEmailAndDisplayName(email, displayName);
-                    await LoadProfilePictureAsync(true);
-                    await LoadPrimaryWalletAddressAsync();
-                    await LoadUserCoinInfoAsync();
-                    _canvasGroup.interactable = true;
-                    _fullScreenLoadingIndicator.SetEnabled(false);
+                    await ReloadUserProfileAsync();
                     break;
                 case EnumLoginState.Error:
                     break;
             };
+        }
+        private async Task ReloadUserProfileAsync()
+        {
+            SetEmailAndDisplayName("Loading email...", "Loading display name...");
+            SetUserCoinInfoIsLoading();
+            string displayName = string.Empty;
+            string email = string.Empty;
+            if (RGNCore.I.AuthorizedProviders == EnumAuthProvider.Guest)
+            {
+                displayName = " Guest Account";
+                email = "guest@getready.io";
+            }
+            else if (RGNCore.I.AuthorizedProviders == EnumAuthProvider.Email)
+            {
+                var userProfile = await UserProfileModule.I.GetProfileAsync(RGNCore.I.MasterAppUser.UserId);
+                displayName = userProfile.displayName;
+                email = RGNCore.I.MasterAppUser.Email;
+            }
+            SetEmailAndDisplayName(email, displayName);
+            await LoadProfilePictureAsync(true);
+            await LoadPrimaryWalletAddressAsync();
+            await LoadUserCoinInfoAsync();
+            _canvasGroup.interactable = true;
+            _fullScreenLoadingIndicator.SetEnabled(false);
         }
         private void SetEmailAndDisplayName(string email, string displayName)
         {
