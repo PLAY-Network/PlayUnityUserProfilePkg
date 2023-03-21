@@ -57,6 +57,7 @@ namespace RGN.Samples
                     break;
                 case EnumLoginState.Success:
                     SetEmailAndDisplayName("Loading email...", "Loading display name...");
+                    SetUserCoinInfoIsLoading();
                     string displayName = string.Empty;
                     string email = string.Empty;
                     if (RGNCore.I.AuthorizedProviders == EnumAuthProvider.Guest)
@@ -190,6 +191,11 @@ namespace RGN.Samples
                 _rgnCoinInfo.Init(currency);
                 _customCoinInfo.Init(currency);
             }
+        }
+        private void SetUserCoinInfoIsLoading()
+        {
+            _rgnCoinInfo.SetIsLoading();
+            _customCoinInfo.SetIsLoading();
         }
     }
 }
