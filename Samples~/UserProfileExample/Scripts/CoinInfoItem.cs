@@ -16,5 +16,9 @@ namespace RGN.Samples
                 _quantity.text = currency.quantity.ToString();
             }
         }
+        internal void SetIsLoading()
+        {
+            _quantity.text = "Loading...";
+        }
     }
 }
