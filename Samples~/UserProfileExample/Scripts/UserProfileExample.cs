@@ -25,6 +25,8 @@ namespace RGN.Samples
         [SerializeField] private TextMeshProUGUI _emailText;
         [SerializeField] private TextMeshProUGUI _primaryWalletAddressText;
         [SerializeField] private IconImage _profileIconImage;
+        [SerializeField] private CoinInfoItem _rgnCoinInfo;
+        [SerializeField] private CoinInfoItem _customCoinInfo;
 
         private IUserProfileClient _userProfileClient;
 
@@ -71,6 +73,7 @@ namespace RGN.Samples
                     SetEmailAndDisplayName(email, displayName);
                     await LoadProfilePictureAsync(true);
                     await LoadPrimaryWalletAddressAsync();
+                    await LoadUserCoinInfoAsync();
                     _canvasGroup.interactable = true;
                     _fullScreenLoadingIndicator.SetEnabled(false);
                     break;
@@ -177,6 +180,16 @@ namespace RGN.Samples
             _primaryWalletAddressText.text = primaryWalletAddress;
             _canvasGroup.interactable = true;
             _primaryWalletLoadingIndicator.SetEnabled(false);
+        }
+        private async Task LoadUserCoinInfoAsync()
+        {
+            var result = await UserProfileModule.I.GetUserCurrenciesAsync();
+            for (int i = 0; i < result.Count; ++i)
+            {
+                var currency = result[i];
+                _rgnCoinInfo.Init(currency);
+                _customCoinInfo.Init(currency);
+            }
         }
     }
 }
