@@ -2,7 +2,6 @@ using System.IO;
 using System.Threading.Tasks;
 using RGN.Impl.Firebase;
 using RGN.Modules.UserProfile;
-using RGN.Modules.VirtualItems;
 using RGN.UI;
 using TMPro;
 using UnityEngine;
@@ -13,7 +12,7 @@ namespace RGN.Samples
     public interface IUserProfileClient
     {
         Task<string> GetPrimaryWalletAddressAsync();
-        Task OpenWalletsScreenAsync();
+        void OpenWalletsScreen();
     }
 
     public sealed class UserProfileExample : IUIScreen
@@ -115,7 +114,7 @@ namespace RGN.Samples
             if (userProfilePicture == null)
             {
                 byte[] bytes = await UserProfileModule.I.DownloadAvatarImageAsync(userId);
-                
+
                 if (bytes != null)
                 {
                     userProfilePicture = new Texture2D(1, 1);
@@ -172,9 +171,7 @@ namespace RGN.Samples
                 ToastMessage.I.ShowError("Please open UIRoot Example from Firebase Impl package to open wallets screen");
                 return;
             }
-            _canvasGroup.interactable = false;
-            await _userProfileClient.OpenWalletsScreenAsync();
-            _canvasGroup.interactable = true;
+            _userProfileClient.OpenWalletsScreen();
         }
         private async Task LoadPrimaryWalletAddressAsync()
         {
