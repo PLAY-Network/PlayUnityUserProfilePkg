@@ -30,6 +30,7 @@ namespace RGN.Samples
         [SerializeField] private PullToRefresh _pullToRefresh;
 
         private IUserProfileClient _userProfileClient;
+        private UserProfileData _userProfile;
 
         public override void PreInit(IRGNFrame rgnFrame)
         {
@@ -50,6 +51,10 @@ namespace RGN.Samples
         public void SetUserProfileClient(IUserProfileClient userProfileClient)
         {
             _userProfileClient = userProfileClient;
+        }
+        public int GetRGNCoinBalance()
+        {
+            return _userProfile == null ? 0 : _userProfile.GetRGNCoinBalance();
         }
 
         private async void OnAuthStateChangedAsync(EnumLoginState state, EnumLoginError error)
@@ -78,14 +83,15 @@ namespace RGN.Samples
             }
             else if (RGNCore.I.AuthorizedProviders == EnumAuthProvider.Email)
             {
-                var userProfile = await UserProfileModule.I.GetProfileAsync(RGNCore.I.MasterAppUser.UserId);
-                displayName = userProfile.displayName;
+                _userProfile = await UserProfileModule.I.GetFullUserProfileAsync<UserProfileData>(
+                    RGNCore.I.MasterAppUser.UserId);
+                displayName = _userProfile.displayName;
                 email = RGNCore.I.MasterAppUser.Email;
             }
             SetEmailAndDisplayName(email, displayName);
             await LoadProfilePictureAsync(true);
             await LoadPrimaryWalletAddressAsync();
-            await LoadUserCoinInfoAsync();
+            LoadUserCoinInfoAsync();
             _canvasGroup.interactable = true;
             _fullScreenLoadingIndicator.SetEnabled(false);
         }
@@ -164,7 +170,7 @@ namespace RGN.Samples
             _fullScreenLoadingIndicator.SetEnabled(false);
             _canvasGroup.interactable = true;
         }
-        private async void OnOpenWalletsScreenButtonClickAsync()
+        private void OnOpenWalletsScreenButtonClickAsync()
         {
             if (_userProfileClient == null)
             {
@@ -187,12 +193,16 @@ namespace RGN.Samples
             _canvasGroup.interactable = true;
             _primaryWalletLoadingIndicator.SetEnabled(false);
         }
-        private async Task LoadUserCoinInfoAsync()
+        private void LoadUserCoinInfoAsync()
         {
-            var result = await UserProfileModule.I.GetUserCurrenciesAsync();
-            for (int i = 0; i < result.Count; ++i)
+            var currencies = _userProfile.currencies;
+            for (int i = 0; i < currencies.Count; ++i)
             {
-                var currency = result[i];
+                var currency = currencies[i];
+                if (!currency.appIds.Contains(RGNCore.I.AppIDForRequests))
+                {
+                    continue;
+                }
                 _rgnCoinInfo.Init(currency);
                 _customCoinInfo.Init(currency);
             }
