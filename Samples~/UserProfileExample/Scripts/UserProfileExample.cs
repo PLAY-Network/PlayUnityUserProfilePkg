@@ -19,6 +19,7 @@ namespace RGN.Samples
     public sealed class UserProfileExample : IUIScreen
     {
         [SerializeField] private CanvasGroup _canvasGroup;
+        [SerializeField] private Button _openCurrenciesScreenButton;
         [SerializeField] private Button _openWalletsScreenButton;
         [SerializeField] private Button _openInventoryScreenButton;
         [SerializeField] private LoadingIndicator _fullScreenLoadingIndicator;
@@ -38,6 +39,7 @@ namespace RGN.Samples
         {
             base.PreInit(rgnFrame);
             _profileIconImage.OnClick.AddListener(OnUploadNewProfilePictureButtonClickAsync);
+            _openCurrenciesScreenButton.onClick.AddListener(OnOpenCurrenciesScreenButtonClick);
             _openWalletsScreenButton.onClick.AddListener(OnOpenWalletsScreenButtonClick);
             _openInventoryScreenButton.onClick.AddListener(OnOpenInventoryScreenButtonClick);
             RGNCore.I.AuthenticationChanged += OnAuthStateChangedAsync;
@@ -47,6 +49,7 @@ namespace RGN.Samples
         {
             base.Dispose(disposing);
             _profileIconImage.OnClick.RemoveListener(OnUploadNewProfilePictureButtonClickAsync);
+            _openCurrenciesScreenButton.onClick.RemoveListener(OnOpenCurrenciesScreenButtonClick);
             _openWalletsScreenButton.onClick.RemoveListener(OnOpenWalletsScreenButtonClick);
             _openInventoryScreenButton.onClick.RemoveListener(OnOpenInventoryScreenButtonClick);
             RGNCore.I.AuthenticationChanged -= OnAuthStateChangedAsync;
@@ -60,21 +63,7 @@ namespace RGN.Samples
         {
             return _userProfile == null ? 0 : _userProfile.GetRGNCoinBalance();
         }
-
-        private async void OnAuthStateChangedAsync(EnumLoginState state, EnumLoginError error)
-        {
-            switch (state)
-            {
-                case EnumLoginState.NotLoggedIn:
-                    break;
-                case EnumLoginState.Success:
-                    await ReloadUserProfileAsync();
-                    break;
-                case EnumLoginState.Error:
-                    break;
-            };
-        }
-        private async Task ReloadUserProfileAsync()
+        public async Task ReloadUserProfileAsync()
         {
             SetEmailAndDisplayName("Loading email...", "Loading display name...");
             SetUserCoinInfoIsLoading();
@@ -98,6 +87,20 @@ namespace RGN.Samples
             LoadUserCoinInfoAsync();
             _canvasGroup.interactable = true;
             _fullScreenLoadingIndicator.SetEnabled(false);
+        }
+
+        private async void OnAuthStateChangedAsync(EnumLoginState state, EnumLoginError error)
+        {
+            switch (state)
+            {
+                case EnumLoginState.NotLoggedIn:
+                    break;
+                case EnumLoginState.Success:
+                    await ReloadUserProfileAsync();
+                    break;
+                case EnumLoginState.Error:
+                    break;
+            };
         }
         private void SetEmailAndDisplayName(string email, string displayName)
         {
@@ -173,6 +176,10 @@ namespace RGN.Samples
             await tcs.Task;
             _fullScreenLoadingIndicator.SetEnabled(false);
             _canvasGroup.interactable = true;
+        }
+        private void OnOpenCurrenciesScreenButtonClick()
+        {
+            _rgnFrame.OpenScreen<UserCurrenciesScreen>(_userProfile.currencies);
         }
         private void OnOpenWalletsScreenButtonClick()
         {
