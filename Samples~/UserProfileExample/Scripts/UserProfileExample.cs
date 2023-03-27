@@ -13,12 +13,14 @@ namespace RGN.Samples
     {
         Task<string> GetPrimaryWalletAddressAsync();
         void OpenWalletsScreen();
+        void OpenInventoryScreen();
     }
 
     public sealed class UserProfileExample : IUIScreen
     {
         [SerializeField] private CanvasGroup _canvasGroup;
         [SerializeField] private Button _openWalletsScreenButton;
+        [SerializeField] private Button _openInventoryScreenButton;
         [SerializeField] private LoadingIndicator _fullScreenLoadingIndicator;
         [SerializeField] private LoadingIndicator _primaryWalletLoadingIndicator;
         [SerializeField] private TextMeshProUGUI _displayNameText;
@@ -36,7 +38,8 @@ namespace RGN.Samples
         {
             base.PreInit(rgnFrame);
             _profileIconImage.OnClick.AddListener(OnUploadNewProfilePictureButtonClickAsync);
-            _openWalletsScreenButton.onClick.AddListener(OnOpenWalletsScreenButtonClickAsync);
+            _openWalletsScreenButton.onClick.AddListener(OnOpenWalletsScreenButtonClick);
+            _openInventoryScreenButton.onClick.AddListener(OnOpenInventoryScreenButtonClick);
             RGNCore.I.AuthenticationChanged += OnAuthStateChangedAsync;
             _pullToRefresh.RefreshRequested += ReloadUserProfileAsync;
         }
@@ -44,7 +47,8 @@ namespace RGN.Samples
         {
             base.Dispose(disposing);
             _profileIconImage.OnClick.RemoveListener(OnUploadNewProfilePictureButtonClickAsync);
-            _openWalletsScreenButton.onClick.RemoveListener(OnOpenWalletsScreenButtonClickAsync);
+            _openWalletsScreenButton.onClick.RemoveListener(OnOpenWalletsScreenButtonClick);
+            _openInventoryScreenButton.onClick.RemoveListener(OnOpenInventoryScreenButtonClick);
             RGNCore.I.AuthenticationChanged -= OnAuthStateChangedAsync;
             _pullToRefresh.RefreshRequested -= ReloadUserProfileAsync;
         }
@@ -170,7 +174,7 @@ namespace RGN.Samples
             _fullScreenLoadingIndicator.SetEnabled(false);
             _canvasGroup.interactable = true;
         }
-        private void OnOpenWalletsScreenButtonClickAsync()
+        private void OnOpenWalletsScreenButtonClick()
         {
             if (_userProfileClient == null)
             {
@@ -178,6 +182,15 @@ namespace RGN.Samples
                 return;
             }
             _userProfileClient.OpenWalletsScreen();
+        }
+        private void OnOpenInventoryScreenButtonClick()
+        {
+            if (_userProfileClient == null)
+            {
+                ToastMessage.I.ShowError("Please open UIRoot Example from Firebase Impl package to open inventory screen");
+                return;
+            }
+            _userProfileClient.OpenInventoryScreen();
         }
         private async Task LoadPrimaryWalletAddressAsync()
         {
