@@ -14,12 +14,15 @@ namespace RGN.Samples
         Task<string> GetPrimaryWalletAddressAsync();
         void OpenWalletsScreen();
         void OpenInventoryScreen();
+        void OpenGameProgressScreen();
+        Task<int> GetUserLevelAsync();
     }
 
     public sealed class UserProfileExample : IUIScreen
     {
         [SerializeField] private CanvasGroup _canvasGroup;
         [SerializeField] private Button _openCurrenciesScreenButton;
+        [SerializeField] private Button _openGameProgressScreenButton;
         [SerializeField] private Button _openWalletsScreenButton;
         [SerializeField] private Button _openInventoryScreenButton;
         [SerializeField] private LoadingIndicator _fullScreenLoadingIndicator;
@@ -27,6 +30,7 @@ namespace RGN.Samples
         [SerializeField] private TextMeshProUGUI _displayNameText;
         [SerializeField] private TextMeshProUGUI _emailText;
         [SerializeField] private TextMeshProUGUI _primaryWalletAddressText;
+        [SerializeField] private TextMeshProUGUI _userLevelValueText;
         [SerializeField] private IconImage _profileIconImage;
         [SerializeField] private CoinInfoItem _rgnCoinInfo;
         [SerializeField] private CoinInfoItem _customCoinInfo;
@@ -40,6 +44,7 @@ namespace RGN.Samples
             base.PreInit(rgnFrame);
             _profileIconImage.OnClick.AddListener(OnUploadNewProfilePictureButtonClickAsync);
             _openCurrenciesScreenButton.onClick.AddListener(OnOpenCurrenciesScreenButtonClick);
+            _openGameProgressScreenButton.onClick.AddListener(OnOpenGameProgressScreenButtonClick);
             _openWalletsScreenButton.onClick.AddListener(OnOpenWalletsScreenButtonClick);
             _openInventoryScreenButton.onClick.AddListener(OnOpenInventoryScreenButtonClick);
             RGNCore.I.AuthenticationChanged += OnAuthStateChangedAsync;
@@ -50,6 +55,7 @@ namespace RGN.Samples
             base.Dispose(disposing);
             _profileIconImage.OnClick.RemoveListener(OnUploadNewProfilePictureButtonClickAsync);
             _openCurrenciesScreenButton.onClick.RemoveListener(OnOpenCurrenciesScreenButtonClick);
+            _openGameProgressScreenButton.onClick.RemoveListener(OnOpenGameProgressScreenButtonClick);
             _openWalletsScreenButton.onClick.RemoveListener(OnOpenWalletsScreenButtonClick);
             _openInventoryScreenButton.onClick.RemoveListener(OnOpenInventoryScreenButtonClick);
             RGNCore.I.AuthenticationChanged -= OnAuthStateChangedAsync;
@@ -83,6 +89,7 @@ namespace RGN.Samples
             }
             SetEmailAndDisplayName(email, displayName);
             await LoadProfilePictureAsync(true);
+            await LoadUserLevelAsync();
             await LoadPrimaryWalletAddressAsync();
             LoadUserCoinInfoAsync();
             _canvasGroup.interactable = true;
@@ -190,6 +197,15 @@ namespace RGN.Samples
             }
             _userProfileClient.OpenWalletsScreen();
         }
+        private void OnOpenGameProgressScreenButtonClick()
+        {
+            if (_userProfileClient == null)
+            {
+                ToastMessage.I.ShowError("Please open UIRoot Example from Firebase Impl package to open game progress screen");
+                return;
+            }
+            _userProfileClient.OpenGameProgressScreen();
+        }
         private void OnOpenInventoryScreenButtonClick()
         {
             if (_userProfileClient == null)
@@ -206,12 +222,26 @@ namespace RGN.Samples
                 _primaryWalletAddressText.text = "Use UIRoot Example from Firebase Impl package";
                 return;
             }
+            _primaryWalletAddressText.text = "Loading...";
             _canvasGroup.interactable = false;
             _primaryWalletLoadingIndicator.SetEnabled(true);
             string primaryWalletAddress = await _userProfileClient.GetPrimaryWalletAddressAsync();
             _primaryWalletAddressText.text = primaryWalletAddress;
             _canvasGroup.interactable = true;
             _primaryWalletLoadingIndicator.SetEnabled(false);
+        }
+        private async Task LoadUserLevelAsync()
+        {
+            if (_userProfileClient == null)
+            {
+                _userLevelValueText.text = "Use UIRoot Example from Firebase Impl package";
+                return;
+            }
+            _userLevelValueText.text = "Loading...";
+            _canvasGroup.interactable = false;
+            var userLevel = await _userProfileClient.GetUserLevelAsync();
+            _userLevelValueText.text = userLevel.ToString();
+            _canvasGroup.interactable = true;
         }
         private void LoadUserCoinInfoAsync()
         {
