@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>RGNUserProfile</name>
+    </assembly>
+    <members>
+        <member name="M:RGN.Modules.UserProfile.UserProfileModule.GetProfileAsync">
+            <summary>
+            Returns user data for current authenticated user.
+            </summary>
+            <returns>Basic user data</returns>
+        </member>
+        <member name="M:RGN.Modules.UserProfile.UserProfileModule.GetProfileAsync(System.String)">
+            <summary>
+            Returns user data for provided user id. The base data contains some basic user info
+            In case you want to request more information (like user coins) please use the
+            <see cref="M:RGN.Modules.UserProfile.UserProfileModule.GetFullUserProfileAsync``1(System.String)"/> method
+            </summary>
+            <param name="userId">User Id to get the data</param>
+            <returns>Basic user data</returns>
+        </member>
+        <member name="M:RGN.Modules.UserProfile.UserProfileModule.GetFullUserProfileAsync``1">
+            <summary>
+            Returns user full profile data for current authenticated user.
+            The data contains user coins currencies information.
+            You can use the <see cref="T:RGN.Modules.UserProfile.UserProfileData"/> as the generic parameter or
+            implement your own serializable class to store additional data.
+            </summary>
+            <param name="userId">User Id to get the data</param>
+            <returns>A generic TFullProfileData class contaning user's full profile for the userId specified.</returns>
+        </member>
+        <member name="M:RGN.Modules.UserProfile.UserProfileModule.GetFullUserProfileAsync``1(System.String)">
+            <summary>
+            Returns user full profile data for provided user id.
+            The data contains user coins currencies information.
+            You can use the <see cref="T:RGN.Modules.UserProfile.UserProfileData"/> as the generic parameter or
+            implement your own serializable class to store additional data.
+            </summary>
+            <param name="userId">User Id to get the data</param>
+            <returns>A generic TFullProfileData class contaning user's full profile for the userId specified.</returns>
+        </member>
+    </members>
+</doc>
