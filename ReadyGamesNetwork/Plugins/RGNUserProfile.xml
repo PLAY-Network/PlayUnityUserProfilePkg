@@ -4,6 +4,11 @@
         <name>RGNUserProfile</name>
     </assembly>
     <members>
+        <member name="T:RGN.Modules.UserProfile.UserProfileModule">
+            <summary>
+            Represents a module for managing user profiles.
+            </summary>
+        </member>
         <member name="M:RGN.Modules.UserProfile.UserProfileModule.GetProfileAsync">
             <summary>
             Returns user data for current authenticated user.
@@ -38,6 +43,119 @@
             </summary>
             <param name="userId">User Id to get the data</param>
             <returns>A generic TFullProfileData class contaning user's full profile for the userId specified.</returns>
+        </member>
+        <member name="M:RGN.Modules.UserProfile.UserProfileModule.SearchUsersAsync(System.String)">
+            <summary>
+            Searches for users by their nickname.
+            </summary>
+            <param name="nicknameQuery">The query string to search for in user nicknames.</param>
+            <returns>A Task containing a List of UserData objects representing the matching users.</returns>
+        </member>
+        <member name="M:RGN.Modules.UserProfile.UserProfileModule.GetUserCurrenciesAsync">
+            <summary>
+            Gets a list of the currencies owned by the current user.
+            </summary>
+            <returns>A Task containing a List of Currency objects representing the user's currencies.</returns>
+        </member>
+        <member name="M:RGN.Modules.UserProfile.UserProfileModule.GetUserIdByShortUIDAsync(System.String)">
+            <summary>
+            Gets the user ID associated with a short UID.
+            </summary>
+            <param name="shortUID">The short UID to get the associated user ID for.</param>
+            <returns>A Task containing the user ID associated with the short UID.</returns>
+        </member>
+        <member name="M:RGN.Modules.UserProfile.UserProfileModule.SetDisplayNameAsync(System.String)">
+            <summary>
+            Sets the display name of the user.
+            </summary>
+            <param name="displayName">The new display name of the user.</param>
+            <returns>A Task containing the new display name of the user.</returns>
+        </member>
+        <member name="M:RGN.Modules.UserProfile.UserProfileModule.SetBioAsync(System.String)">
+            <summary>
+            Sets the bio of the user.
+            </summary>
+            <param name="bio">The new bio of the user.</param>
+            <returns>A Task containing the new bio of the user.</returns>
+        </member>
+        <member name="M:RGN.Modules.UserProfile.UserProfileModule.SetDisplayNameAndBioAsync(System.String,System.String)">
+            <summary>
+            Sets the display name and bio of the user.
+            </summary>
+            <param name="displayName">The new display name of the user.</param>
+            <param name="bio">The new bio of the user.</param>
+            <returns>A Task containing the new display name of the user.</returns>
+        </member>
+        <member name="M:RGN.Modules.UserProfile.UserProfileModule.UploadAvatarImageAsync(System.Byte[],System.Threading.CancellationToken)">
+            <summary>
+            Uploads a user's avatar image to the RGNCore backend.
+            </summary>
+            <param name="bytes">The byte array of the avatar image to upload.</param>
+            <param name="cancellationToken">The cancellation token.</param>
+            <returns>A boolean indicating whether the upload was successful.</returns>
+        </member>
+        <member name="M:RGN.Modules.UserProfile.UserProfileModule.DownloadAvatarImageAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Downloads the avatar image of a user as a byte array from Firebase storage.
+            </summary>
+            <param name="userId">The ID of the user whose avatar image to download.</param>
+            <param name="cancellationToken">A cancellation token that can be used to cancel the download operation.</param>
+            <returns>A byte array containing the avatar image, or null if the download fails.</returns>
+        </member>
+        <member name="M:RGN.Modules.UserProfile.UserProfileModule.ChangeAdminStatusByEmailAsync(System.String,System.Boolean,System.Int32)">
+            <summary>
+            Changes the admin status and access level of a user by their email.
+            </summary>
+            <param name="email">The email of the user to modify.</param>
+            <param name="isAdmin">True if the user should be made an admin, false otherwise.</param>
+            <param name="accessLevel">The new access level for the user.</param>
+            <returns>A Task containing a Dictionary of key-value pairs representing the updated user data.</returns>
+        </member>
+        <member name="M:RGN.Modules.UserProfile.UserProfileModule.ChangeAdminStatusByUserIdAsync(System.String,System.Boolean,System.Int32)">
+            <summary>
+            Changes the admin status and access level of a user by their user ID.
+            </summary>
+            <param name="userId">The user ID of the user to modify.</param>
+            <param name="isAdmin">True if the user should be made an admin, false otherwise.</param>
+            <param name="accessLevel">The new access level for the user.</param>
+            <returns>A Task containing a Dictionary of key-value pairs representing the updated user data.</returns>
+        </member>
+        <member name="M:RGN.Modules.UserProfile.UserProfileModule.GetUserCustomClaimsByUserIdAsync(System.String)">
+            <summary>
+            Gets the custom claims for a user by their user ID.
+            </summary>
+            <param name="userId">The user ID of the user to retrieve custom claims for.</param>
+            <returns>A Task containing a Dictionary of key-value pairs representing the user's custom claims.</returns>
+        </member>
+        <member name="M:RGN.Modules.UserProfile.UserProfileModule.GetUserCustomClaimsByEmailAsync(System.String)">
+            <summary>
+            Gets the custom claims for a user by their email.
+            </summary>
+            <param name="email">The email of the user to retrieve custom claims for.</param>
+            <returns>A Task containing a Dictionary of key-value pairs representing the user's custom claims.</returns>
+        </member>
+        <member name="M:RGN.Modules.UserProfile.UserProfileModule.SetInvisibleStatusAsync(System.Boolean)">
+            <summary>
+            Sets the invisible status for the current user.
+            </summary>
+            <param name="invisibleStatus">True if the user should be invisible, false otherwise.</param>
+        </member>
+        <member name="M:RGN.Modules.UserProfile.UserProfileModule.PingAsync">
+            <summary>
+            Sends a ping to the server to update the user's status.
+            </summary>
+        </member>
+        <member name="M:RGN.Modules.UserProfile.UserProfileModule.SuspendAsync">
+            <summary>
+            Suspends the user's status updates.
+            </summary>
+        </member>
+        <member name="M:RGN.Modules.UserProfile.UserProfileModule.GetUserStateAsync(System.String)">
+            <summary>
+            Retrieves the status of a user with the specified user ID.
+            </summary>
+            <param name="userId">The user ID of the user whose status to retrieve.</param>
+            <returns>A Task containing the status of the user as a GetUserStatusResponseData object.</returns>
         </member>
     </members>
 </doc>
