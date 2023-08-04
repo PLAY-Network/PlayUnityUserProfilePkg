@@ -96,9 +96,9 @@ namespace RGN.Samples
             _fullScreenLoadingIndicator.SetEnabled(false);
         }
 
-        private async void OnAuthStateChangedAsync(EnumLoginState state, EnumLoginError error)
+        private async void OnAuthStateChangedAsync(AuthState authState)
         {
-            switch (state)
+            switch (authState.LoginState)
             {
                 case EnumLoginState.NotLoggedIn:
                     break;
