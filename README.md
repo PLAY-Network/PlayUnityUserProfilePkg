@@ -1,2 +1,2 @@
 # RGN UserProfile
-Package version: 0.7.0-dev.344
+Package version: 0.7.0-dev.345
