@@ -1,6 +1,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using RGN.Impl.Firebase;
+using RGN.Model;
 using RGN.Modules.UserProfile;
 using RGN.UI;
 using TMPro;
@@ -96,9 +97,9 @@ namespace RGN.Samples
             _fullScreenLoadingIndicator.SetEnabled(false);
         }
 
-        private async void OnAuthStateChangedAsync(EnumLoginState state, EnumLoginError error)
+        private async void OnAuthStateChangedAsync(AuthState authState)
         {
-            switch (state)
+            switch (authState.LoginState)
             {
                 case EnumLoginState.NotLoggedIn:
                     break;
@@ -133,7 +134,7 @@ namespace RGN.Samples
             }
             if (userProfilePicture == null)
             {
-                byte[] bytes = await UserProfileModule.I.DownloadAvatarImageAsync(userId);
+                byte[] bytes = await UserProfileModule.I.DownloadAvatarImageAsync(userId, ImageSize.Small);
 
                 if (bytes != null)
                 {
@@ -245,6 +246,10 @@ namespace RGN.Samples
         }
         private void LoadUserCoinInfoAsync()
         {
+            if (_userProfile == null)
+            {
+                return;
+            }
             var currencies = _userProfile.currencies;
             for (int i = 0; i < currencies.Count; ++i)
             {
