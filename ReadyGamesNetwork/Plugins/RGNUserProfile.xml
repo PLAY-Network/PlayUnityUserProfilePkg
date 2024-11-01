@@ -4,6 +4,21 @@
         <name>RGNUserProfile</name>
     </assembly>
     <members>
+        <member name="T:RGN.Modules.UserProfile.TryMergeUsersResponseData">
+            <summary>
+            Successfully merged users response data
+            </summary>
+        </member>
+        <member name="F:RGN.Modules.UserProfile.TryMergeUsersResponseData.sourceUserId">
+            <summary>
+            The ID of the source user
+            </summary>
+        </member>
+        <member name="F:RGN.Modules.UserProfile.TryMergeUsersResponseData.targetUserId">
+            <summary>
+            The ID of the target user
+            </summary>
+        </member>
         <member name="T:RGN.Modules.UserProfile.UserProfileModule">
             <summary>
             Represents a module for managing user profiles.
@@ -177,6 +192,13 @@
             <summary>
             Deletes the user's account.
             </summary>
+            <param name="cancellationToken">A token to cancel the operation.</param>
+        </member>
+        <member name="M:RGN.Modules.UserProfile.UserProfileModule.TryMergeUsersAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Tries to merge the current user account into the target user account
+            </summary>
+            <param name="targetUserIdToken">The target user id token</param>
             <param name="cancellationToken">A token to cancel the operation.</param>
         </member>
     </members>
