@@ -1,5 +1,5 @@
 {
-    "name": "GetReady.RGN.UserProfile.Example",
+    "name": "Play.Unity.UserProfile.Example",
     "rootNamespace": "",
     "references": [
         "GUID:cf87a66721c783241b810ce809921a27",
