@@ -1,2 +1,1 @@
-# Play SDK UserProfile
-Package version: 0.16.0-dev.11
+# Play SDK User Profile
