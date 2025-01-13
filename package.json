@@ -1,5 +1,5 @@
 ﻿{
-  "name": "io.play.unity.userprofile",
+  "name": "network.theplay.unity.userprofile",
   "displayName": "PLAY SDK. User Profile",
   "version": "0.16.0",
   "unity": "2020.3",
@@ -36,7 +36,7 @@
     }
   ],
   "dependencies": {
-    "io.play.unity.core": "0.16.0",
-    "io.play.unity.currency": "0.16.0"
+    "network.theplay.unity.core": "0.16.0",
+    "network.theplay.unity.currency": "0.16.0"
   }
 }
