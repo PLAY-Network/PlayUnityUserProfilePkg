@@ -1,2 +1,2 @@
 # Play SDK UserProfile
-Package version: 0.16.0-dev.36
+Package version: 0.16.0-dev.37
